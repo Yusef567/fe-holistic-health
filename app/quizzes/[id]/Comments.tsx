@@ -1,7 +1,7 @@
 "use client";
 
-import { getComments } from "@/app/api/comments";
-import { Comment } from "@/app/types/commentsTypes";
+import { getComments } from "../../api/comments";
+import { Comment } from "../../types/commentsTypes";
 import { CustomAxiosError } from "@/app/types/errorTypes";
 import { Quiz } from "@/app/types/quizTypes";
 import { dateFormatter } from "@/app/utils/dateFormatter";

@@ -1,6 +1,6 @@
 "use client";
 
-import { Answer, Quiz } from "@/app/types/quizTypes";
+import { Answer, Quiz } from "../../types/quizTypes";
 import { useEffect, useState } from "react";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 import { motion } from "framer-motion";
