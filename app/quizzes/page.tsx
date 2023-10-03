@@ -292,7 +292,7 @@ const Quizzes = () => {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Category</SelectLabel>
-                <SelectItem value="">All Categories</SelectItem>
+                {/* <SelectItem value="">All Categories</SelectItem> */}
                 {categories.map((category: any) => (
                   <SelectItem
                     aria-label={`Select ${category.category} quizzes`}
