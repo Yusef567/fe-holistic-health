@@ -35,7 +35,7 @@ const Login = () => {
             placeholder="Username"
             className="my-3"
             value={username}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            onChange={(e: any) => {
               setUsername(e.target.value);
             }}
           />
@@ -48,7 +48,7 @@ const Login = () => {
             placeholder="Password"
             className="my-3"
             value={password}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            onChange={(e: any) => {
               setPassword(e.target.value);
             }}
           />
@@ -58,7 +58,7 @@ const Login = () => {
         </form>
         <div className="mt-5 flex flex-col">
           <h3 className="text-xl md:text-2xl font-medium">
-            Don't have an account?{" "}
+            Don't have an account?
             <Link
               href="/register"
               className="text-indigo-500 "
