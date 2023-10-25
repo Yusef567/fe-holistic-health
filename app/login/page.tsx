@@ -19,7 +19,7 @@ const Login = () => {
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-black my-3">
           Holistic Health
         </h1>
-        <h2 className="text-5xl mt-2 md:text-6xl lg:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-l from-custom-green to-custom-blue pb-1">
+        {/* <h2 className="text-5xl mt-2 md:text-6xl lg:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-l from-custom-green to-custom-blue pb-1">
           Log In
         </h2>
         <form
@@ -68,6 +68,7 @@ const Login = () => {
             </Link>
           </h3>
         </div>
+          */}
       </section>
     </main>
   );
