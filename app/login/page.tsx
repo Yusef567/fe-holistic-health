@@ -29,8 +29,8 @@ const Login = () => {
           <Label htmlFor="username" className="text-2xl">
             Username
           </Label>
-          {/* <Input
-            type="username"
+          <Input
+            type="text"
             id="username"
             placeholder="Username"
             className="my-3"
@@ -39,7 +39,7 @@ const Login = () => {
               setUsername(e.target.value);
             }}
           />
-          <Label htmlFor="password" className="text-2xl">
+          {/* <Label htmlFor="password" className="text-2xl">
             Password
           </Label>
           <Input
@@ -51,10 +51,10 @@ const Login = () => {
             onChange={(e: any) => {
               setPassword(e.target.value);
             }}
-          />
+          /> */}
           <button className="bg-gradient-to-r from-blue-500 to-indigo-600 font-semibold rounded w-36 py-2 mt-5 hover:opacity-95 self-center">
             Log In
-          </button> */}
+          </button>
         </form>
         {/* <div className="mt-5 flex flex-col">
           <h3 className="text-xl md:text-2xl font-medium">
