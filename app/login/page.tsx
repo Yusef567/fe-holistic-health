@@ -56,9 +56,9 @@ const Login = () => {
             Log In
           </button>
         </form>
-        {/* <div className="mt-5 flex flex-col">
+        <div className="mt-5 flex flex-col">
           <h3 className="text-xl md:text-2xl font-medium">
-            Don't have an account?
+            Don have an account?
             <Link
               href="/register"
               className="text-indigo-500 "
@@ -67,7 +67,7 @@ const Login = () => {
               Sign up
             </Link>
           </h3>
-        </div> */}
+        </div>
       </section>
     </main>
   );
