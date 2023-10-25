@@ -22,7 +22,7 @@ const Login = () => {
         <h2 className="text-5xl mt-2 md:text-6xl lg:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-l from-custom-green to-custom-blue pb-1">
           Log In
         </h2>
-        <form
+        {/* <form
           className="w-2/3 md:w-2/5 lg:w-1/5 mt-5 flex flex-col"
           onSubmit={handleLogin}
         >
@@ -67,7 +67,7 @@ const Login = () => {
               Sign up
             </Link>
           </h3>
-        </div>
+        </div> */}
       </section>
     </main>
   );
