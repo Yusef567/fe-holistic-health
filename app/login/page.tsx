@@ -58,7 +58,7 @@ const Login = () => {
         </form>
         <div className="mt-5 flex flex-col">
           <h3 className="text-xl md:text-2xl font-medium">
-            Don have an account?
+            {"Don't have an account? "}
             <Link
               href="/register"
               className="text-indigo-500 "
