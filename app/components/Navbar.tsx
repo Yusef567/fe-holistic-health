@@ -15,7 +15,7 @@ const Navbar = () => {
   const navLinks: NavLink[] = [
     { name: "Home", nav: "/", id: 1 },
     { name: "Quizzes", nav: "/quizzes", id: 2 },
-    { name: "Log In", nav: "/login", id: 3 },
+    { name: "Account", nav: "/profile", id: 3 },
   ];
 
   return (

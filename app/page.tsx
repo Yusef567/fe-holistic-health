@@ -1,8 +1,11 @@
 "use client";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useAuth } from "./contexts/AuthContext";
 
 const Home = () => {
+  const { isAuthenticated } = useAuth();
+
   return (
     <main className="px-10 font-sans">
       <section className="flex justify-center items-center">
@@ -52,32 +55,34 @@ const Home = () => {
             quizzes, ensuring accuracy, and fostering a collaborative
             environment for health education
           </motion.p>
-          <motion.div
-            className="mt-10"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-          >
-            <h3 className=" text-center text-4xl py-2 font-semibold">
-              Get Started
-            </h3>
-            <div className=" text-center flex justify-center py-4 gap-6">
-              <Link
-                href="/login"
-                className="bg-gradient-to-r from-blue-500 to-indigo-600 font-medium py-2 rounded min-w-[130px] cursor-pointer hover:opacity-95"
-                aria-label="Log In"
-              >
-                Log In
-              </Link>
-              <Link
-                href="/register"
-                className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:bg-black  font-medium py-2 rounded min-w-[130px] cursor-pointer hover:opacity-95"
-                aria-label="Sign Up"
-              >
-                Sign Up
-              </Link>
-            </div>
-          </motion.div>
+          {!isAuthenticated() ? (
+            <motion.div
+              className="mt-10"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+            >
+              <h3 className=" text-center text-4xl py-2 font-semibold">
+                Get Started
+              </h3>
+              <div className=" text-center flex justify-center py-4 gap-6">
+                <Link
+                  href="/login"
+                  className="bg-gradient-to-r from-blue-500 to-indigo-600 font-medium py-2 rounded min-w-[130px] cursor-pointer hover:opacity-95"
+                  aria-label="Log In"
+                >
+                  Log In
+                </Link>
+                <Link
+                  href="/register"
+                  className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:bg-black  font-medium py-2 rounded min-w-[130px] cursor-pointer hover:opacity-95"
+                  aria-label="Sign Up"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            </motion.div>
+          ) : null}
         </div>
       </section>
     </main>
