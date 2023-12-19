@@ -12,3 +12,8 @@ export type Comment = {
   created_at: string;
   likes: number;
 };
+
+export type CommentVote = {
+  comment_id: number;
+  hasLiked: boolean | null;
+};

@@ -1,18 +1,32 @@
 "use client";
 
-import { getComments } from "../../api/comments";
-import { Comment } from "../../types/commentsTypes";
+import { getComments, protectedComments } from "../../api/comments";
+import { Comment, CommentVote } from "../../types/commentsTypes";
 import { CustomAxiosError } from "@/app/types/errorTypes";
 import { Quiz } from "@/app/types/quizTypes";
 import { dateFormatter } from "@/app/utils/dateFormatter";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { useEffect, useRef } from "react";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
 import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import { MdAccountCircle } from "react-icons/md";
 import { useIntersection } from "@mantine/hooks";
 import LoadingComments from "./LoadingComments";
+import { useAuth } from "@/app/contexts/AuthContext";
+import { useRouter } from "next/navigation";
 
 const Comments = ({ quiz }: { quiz: Quiz }) => {
+  const [likedComments, setLikedComments] = useState<CommentVote[]>([]);
+
+  const { accessToken } = useAuth();
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  const { fetchLikedStatus, patchComment } = protectedComments();
+
   const limit = 5;
 
   const { data, isLoading, isError, error, fetchNextPage } = useInfiniteQuery(
@@ -41,6 +55,99 @@ const Comments = ({ quiz }: { quiz: Quiz }) => {
   useEffect(() => {
     if (entry?.isIntersecting) fetchNextPage();
   }, [entry]);
+
+  useEffect(() => {
+    if (quiz?.quiz_id && accessToken) {
+      fetchLikedStatus(quiz.quiz_id).then((likedCommentsData) => {
+        setLikedComments(likedCommentsData?.votes);
+      });
+    }
+  }, [quiz, accessToken]);
+
+  const likeCommentMutation = useMutation(
+    async ({ comment_id, vote }: { comment_id: number; vote: boolean }) => {
+      const response = await patchComment(comment_id, vote);
+
+      return response.data;
+    },
+    {
+      onMutate: async ({ comment_id, vote }) => {
+        const prevComments = queryClient.getQueryData<Comment[]>(["comments"]);
+        const updatedComments = prevComments?.map((comment) => {
+          if (comment.comment_id === comment_id) {
+            return {
+              ...comment,
+              likes: vote ? comment.likes + 1 : comment.likes - 1,
+            };
+          }
+          return comment;
+        });
+        queryClient.setQueryData<Comment[] | undefined>(
+          ["comments"],
+          updatedComments
+        );
+
+        const updatedLikedComments = likedComments.map((comment) => {
+          const commentCopy = { ...comment };
+          if (commentCopy.comment_id === comment_id) {
+            if (commentCopy.hasLiked === null) {
+              commentCopy.hasLiked = vote;
+            } else if (commentCopy.hasLiked === true && vote === false) {
+              commentCopy.hasLiked = null;
+            } else if (commentCopy.hasLiked === false && vote === true) {
+              commentCopy.hasLiked = null;
+            }
+          }
+          return commentCopy;
+        });
+        setLikedComments(updatedLikedComments);
+        return { prevComments, prevLikedComments: likedComments };
+      },
+      onError: (
+        error,
+        comment,
+        context = { prevComments: [], prevLikedComments: [] }
+      ) => {
+        queryClient.setQueryData<Comment[] | undefined>(
+          ["comments"],
+          context.prevComments
+        );
+
+        setLikedComments(context.prevLikedComments);
+      },
+      onSettled: async () => {
+        queryClient.invalidateQueries(["comments"]);
+
+        if (accessToken && quiz?.quiz_id) {
+          const likedCommentsData = await fetchLikedStatus(quiz.quiz_id);
+          setLikedComments(likedCommentsData.votes);
+        }
+      },
+    }
+  );
+
+  const handleLike = (comment_id: number, vote: boolean) => {
+    if (accessToken) {
+      const comment = likedComments?.find(
+        (comment) => comment.comment_id === comment_id
+      );
+
+      if (
+        comment?.hasLiked === null ||
+        (comment?.hasLiked === true && vote === false) ||
+        (comment?.hasLiked === false && vote === true)
+      ) {
+        likeCommentMutation.mutate({ comment_id, vote });
+      } else if (
+        (comment?.hasLiked === true && vote === true) ||
+        (comment?.hasLiked === false && vote === false)
+      ) {
+        likeCommentMutation.mutate({ comment_id, vote: !vote });
+      }
+    } else {
+      router.push("/profile");
+    }
+  };
 
   if (isLoading) {
     return <LoadingComments />;
@@ -77,9 +184,41 @@ const Comments = ({ quiz }: { quiz: Quiz }) => {
               <div className="flex items-center text-left text-xl my-2 text-gray-100 ">
                 <p className="mr-5">{dateFormatter(comment?.created_at)}</p>
                 <div className="bg-neutral-800 flex items-center rounded px-2">
-                  <AiFillLike className="text-gray-300 mr-2 hover:cursor-pointer" />
+                  <button
+                    onClick={() => {
+                      handleLike(comment.comment_id, true);
+                    }}
+                  >
+                    <AiFillLike
+                      className={`mr-2 hover:cursor-pointer focus:outline-none ${
+                        likedComments.find(
+                          (likedComment) =>
+                            likedComment.comment_id === comment.comment_id &&
+                            likedComment.hasLiked === true
+                        )
+                          ? "text-blue-500"
+                          : "text-gray-300"
+                      }`}
+                    />
+                  </button>
                   <p className="mr-4 text-gray-100">{comment?.likes}</p>
-                  <AiFillDislike className="text-gray-300 hover:cursor-pointer " />
+                  <button
+                    onClick={() => {
+                      handleLike(comment.comment_id, false);
+                    }}
+                  >
+                    <AiFillDislike
+                      className={`mr-2 hover:cursor-pointer focus:outline-none ${
+                        likedComments.find(
+                          (likedComment) =>
+                            likedComment.comment_id === comment.comment_id &&
+                            likedComment.hasLiked === false
+                        )
+                          ? "text-blue-500"
+                          : "text-gray-300"
+                      }`}
+                    />
+                  </button>
                 </div>
               </div>
             </li>
