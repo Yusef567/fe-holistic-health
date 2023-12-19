@@ -37,29 +37,3 @@ export const fetchQuiz = async (quiz_id: number) => {
     throw err;
   }
 };
-
-export const protectedQuiz = () => {
-  const axiosPrivate = useAxiosPrivate();
-
-  const fetchLikedStatus = async (quiz_id: number) => {
-    try {
-      const response = await axiosPrivate.get(`/quizzes/${quiz_id}/user/likes`);
-      return response.data.likedStatus;
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  const patchQuiz = async (quiz_id: number, vote: boolean) => {
-    try {
-      const response = await axiosPrivate.patch(`/quizzes/${quiz_id}`, {
-        inc_likes: vote,
-      });
-      return response.data.quiz;
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  return { fetchLikedStatus, patchQuiz };
-};

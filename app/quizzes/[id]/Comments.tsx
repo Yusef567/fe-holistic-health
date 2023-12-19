@@ -1,6 +1,6 @@
 "use client";
 
-import { getComments, protectedComments } from "../../api/comments";
+import { getComments } from "../../api/comments";
 import { Comment, CommentVote } from "../../types/commentsTypes";
 import { CustomAxiosError } from "@/app/types/errorTypes";
 import { Quiz } from "@/app/types/quizTypes";
@@ -17,6 +17,7 @@ import { useIntersection } from "@mantine/hooks";
 import LoadingComments from "./LoadingComments";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { useRouter } from "next/navigation";
+import useAxiosPrivate from "@/app/hooks/useAxiosPrivate";
 
 const Comments = ({ quiz }: { quiz: Quiz }) => {
   const [likedComments, setLikedComments] = useState<CommentVote[]>([]);
@@ -24,6 +25,37 @@ const Comments = ({ quiz }: { quiz: Quiz }) => {
   const { accessToken } = useAuth();
   const queryClient = useQueryClient();
   const router = useRouter();
+
+  const protectedComments = () => {
+    const axiosPrivate = useAxiosPrivate();
+
+    const fetchLikedStatus = async (quiz_id: number) => {
+      try {
+        const response = await axiosPrivate.get(
+          `/comments/quiz/${quiz_id}/user/likes`
+        );
+        return response.data.likedStatus;
+      } catch (err) {
+        throw err;
+      }
+    };
+
+    const patchComment = async (comment_id: number, vote: boolean) => {
+      try {
+        const response = await axiosPrivate.patch(`/comments/${comment_id}`, {
+          inc_likes: vote,
+        });
+        return response.data.comment;
+      } catch (err) {
+        throw err;
+      }
+    };
+
+    return {
+      fetchLikedStatus,
+      patchComment,
+    };
+  };
 
   const { fetchLikedStatus, patchComment } = protectedComments();
 
