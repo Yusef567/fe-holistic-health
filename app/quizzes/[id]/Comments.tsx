@@ -26,38 +26,29 @@ const Comments = ({ quiz }: { quiz: Quiz }) => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const protectedComments = () => {
-    const axiosPrivate = useAxiosPrivate();
+  const axiosPrivate = useAxiosPrivate();
 
-    const fetchLikedStatus = async (quiz_id: number) => {
-      try {
-        const response = await axiosPrivate.get(
-          `/comments/quiz/${quiz_id}/user/likes`
-        );
-        return response.data.likedStatus;
-      } catch (err) {
-        throw err;
-      }
-    };
-
-    const patchComment = async (comment_id: number, vote: boolean) => {
-      try {
-        const response = await axiosPrivate.patch(`/comments/${comment_id}`, {
-          inc_likes: vote,
-        });
-        return response.data.comment;
-      } catch (err) {
-        throw err;
-      }
-    };
-
-    return {
-      fetchLikedStatus,
-      patchComment,
-    };
+  const fetchLikedStatus = async (quiz_id: number) => {
+    try {
+      const response = await axiosPrivate.get(
+        `/comments/quiz/${quiz_id}/user/likes`
+      );
+      return response.data.likedStatus;
+    } catch (err) {
+      throw err;
+    }
   };
 
-  const { fetchLikedStatus, patchComment } = protectedComments();
+  const patchComment = async (comment_id: number, vote: boolean) => {
+    try {
+      const response = await axiosPrivate.patch(`/comments/${comment_id}`, {
+        inc_likes: vote,
+      });
+      return response.data.comment;
+    } catch (err) {
+      throw err;
+    }
+  };
 
   const limit = 5;
 
