@@ -28,35 +28,27 @@ const SingleQuiz = ({ params }: { params: { id: string } }) => {
 
   if (isNaN(quizId)) router.push("/quizzes");
 
-  const protectedQuiz = () => {
-    const axiosPrivate = useAxiosPrivate();
+  const axiosPrivate = useAxiosPrivate();
 
-    const fetchLikedStatus = async (quiz_id: number) => {
-      try {
-        const response = await axiosPrivate.get(
-          `/quizzes/${quiz_id}/user/likes`
-        );
-        return response.data.likedStatus;
-      } catch (err) {
-        throw err;
-      }
-    };
-
-    const patchQuiz = async (quiz_id: number, vote: boolean) => {
-      try {
-        const response = await axiosPrivate.patch(`/quizzes/${quiz_id}`, {
-          inc_likes: vote,
-        });
-        return response.data.quiz;
-      } catch (err) {
-        throw err;
-      }
-    };
-
-    return { fetchLikedStatus, patchQuiz };
+  const fetchLikedStatus = async (quiz_id: number) => {
+    try {
+      const response = await axiosPrivate.get(`/quizzes/${quiz_id}/user/likes`);
+      return response.data.likedStatus;
+    } catch (err) {
+      throw err;
+    }
   };
 
-  const { fetchLikedStatus, patchQuiz } = protectedQuiz();
+  const patchQuiz = async (quiz_id: number, vote: boolean) => {
+    try {
+      const response = await axiosPrivate.patch(`/quizzes/${quiz_id}`, {
+        inc_likes: vote,
+      });
+      return response.data.quiz;
+    } catch (err) {
+      throw err;
+    }
+  };
 
   useEffect(() => {
     if (accessToken) {
