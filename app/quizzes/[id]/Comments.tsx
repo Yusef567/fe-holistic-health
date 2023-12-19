@@ -26,6 +26,12 @@ const Comments = ({ quiz }: { quiz: Quiz }) => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
+  useEffect(() => {
+    if (quiz && quiz.quiz_id) {
+      queryClient.invalidateQueries(["comments", quiz.quiz_id]);
+    }
+  }, [quiz, queryClient]);
+
   const axiosPrivate = useAxiosPrivate();
 
   const fetchLikedStatus = async (quiz_id: number) => {
