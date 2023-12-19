@@ -1,6 +1,6 @@
 "use client";
 
-import { fetchQuiz, protectedQuiz } from "@/app/api/quizzes";
+import { fetchQuiz } from "@/app/api/quizzes";
 import { CustomAxiosError } from "@/app/types/errorTypes";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { UserLikedStatus } from "@/app/types/usersTypes";
 import PersistLogin from "@/app/components/PersisitLogin";
+import useAxiosPrivate from "@/app/hooks/useAxiosPrivate";
 
 const SingleQuiz = ({ params }: { params: { id: string } }) => {
   const quizId = parseInt(params.id);
@@ -26,6 +27,34 @@ const SingleQuiz = ({ params }: { params: { id: string } }) => {
   const [likedStatus, setLikedStatus] = useState<boolean | null>(null);
 
   if (isNaN(quizId)) router.push("/quizzes");
+
+  const protectedQuiz = () => {
+    const axiosPrivate = useAxiosPrivate();
+
+    const fetchLikedStatus = async (quiz_id: number) => {
+      try {
+        const response = await axiosPrivate.get(
+          `/quizzes/${quiz_id}/user/likes`
+        );
+        return response.data.likedStatus;
+      } catch (err) {
+        throw err;
+      }
+    };
+
+    const patchQuiz = async (quiz_id: number, vote: boolean) => {
+      try {
+        const response = await axiosPrivate.patch(`/quizzes/${quiz_id}`, {
+          inc_likes: vote,
+        });
+        return response.data.quiz;
+      } catch (err) {
+        throw err;
+      }
+    };
+
+    return { fetchLikedStatus, patchQuiz };
+  };
 
   const { fetchLikedStatus, patchQuiz } = protectedQuiz();
 
