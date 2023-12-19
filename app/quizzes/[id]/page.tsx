@@ -28,6 +28,10 @@ const SingleQuiz = ({ params }: { params: { id: string } }) => {
 
   if (isNaN(quizId)) router.push("/quizzes");
 
+  useEffect(() => {
+    queryClient.invalidateQueries(["quiz", quizId]);
+  }, [quizId, queryClient]);
+
   const axiosPrivate = useAxiosPrivate();
 
   const fetchLikedStatus = async (quiz_id: number) => {
