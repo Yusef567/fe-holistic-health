@@ -1,5 +1,6 @@
 import axios from "axios";
 import { AxiosQuizQuery, QuizQueryParams } from "../types/quizTypes";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 const apiInstance = axios.create({
   baseURL: "https://holistic-backend.onrender.com/api",
@@ -35,4 +36,30 @@ export const fetchQuiz = async (quiz_id: number) => {
   } catch (err) {
     throw err;
   }
+};
+
+export const protectedQuiz = () => {
+  const axiosPrivate = useAxiosPrivate();
+
+  const fetchLikedStatus = async (quiz_id: number) => {
+    try {
+      const response = await axiosPrivate.get(`/quizzes/${quiz_id}/user/likes`);
+      return response.data.likedStatus;
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  const patchQuiz = async (quiz_id: number, vote: boolean) => {
+    try {
+      const response = await axiosPrivate.patch(`/quizzes/${quiz_id}`, {
+        inc_likes: vote,
+      });
+      return response.data.quiz;
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  return { fetchLikedStatus, patchQuiz };
 };

@@ -35,11 +35,13 @@ const Home = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: "easeOut" }}
           >
-            Welcome to Holistic Health, our platform is designed to empower
-            individuals and families by providing knowledge on various topics,
-            from respiratory and heart illnesses to lifestyle choices and mental
-            well-being. Take part in this learning journey through our
-            interactive and enjoyable quizzes designed to engage and inform
+            Welcome to Holistic Health, a platform designed to empower patients
+            and families. Our goal is to provide and facilitate patient
+            education on a variety of health topics, from respiratory and heart
+            illnesses, to making better lifestyle choices and promoting mental
+            well-being. Take part in this learning journey thorugh our
+            interactive and enjoyable quizzes designed to engage and inform you
+            on health topics that may be pertinent to you.
           </motion.p>
           <motion.p
             className="text-left text-lg py-2 leading-8 md:text-xl md:leading-10 lg:text-2xl lg:leading-10  font-poppins font-medium"
@@ -50,14 +52,14 @@ const Home = () => {
             Join in on the learning by taking part in informative quizzes,
             without the need for an account. When you decide to sign up enhanced
             features await, enabling you to express your preferences through
-            liking, disliking, and commenting on quizzes. Additionally,
-            healthcare professionals can play an active role by contributing
-            quizzes, ensuring accuracy, and fostering a collaborative
-            environment for health education
+            liking, disliking, and commenting on quizzes. Are you a healthcare
+            professional? Holistic health is a collaborative enviroment where
+            you can play an active role in patient education by creating and
+            contributing quizzes tailored to your own patients.
           </motion.p>
           {!isAuthenticated() ? (
             <motion.div
-              className="mt-10"
+              className="mt-5"
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, ease: "easeOut" }}
